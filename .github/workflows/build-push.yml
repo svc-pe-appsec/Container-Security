@@ -19,13 +19,13 @@ jobs:
       - name: Building Docker Images
         run: |
           docker image build -t $GITHUB_WORKFLOW:$GITHUB_RUN_ID . 
-          docker image tag $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_REPO}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID
-          docker image tag $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_REPO}}/$GITHUB_WORKFLOW:latest
+          docker image tag $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID
+          docker image tag $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:latest
 
       - name: Pushing Image onto Docker Hub
         run: |
           docker login -u ${{secrets.DOCKER_USER}} -p ${{secrets.DOCKER_PASSWORD}}
           docker images
-          docker image push ${{secrets.DOCKER_REPO}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID
-          docker image push ${{secrets.DOCKER_REPO}}/$GITHUB_WORKFLOW:latest
-          docker image rmi $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_REPO}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_REPO}}/$GITHUB_WORKFLOW:latest
+          docker image push ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID
+          docker image push ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:latest
+          docker image rmi $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:latest
