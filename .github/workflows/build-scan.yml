@@ -21,16 +21,24 @@ jobs:
         
       - name: Building Docker Images
         run: |
-          echo ${{ env.IMAGE_NAME }}
+          echo ${{env.IMAGE_NAME}}
           docker image build -t $GITHUB_WORKFLOW:$GITHUB_RUN_ID . 
           docker image tag $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:$GITHUB_RUN_ID
           docker image tag $GITHUB_WORKFLOW:$GITHUB_RUN_ID ${{secrets.DOCKER_USER}}/$GITHUB_WORKFLOW:latest
 
-      - name: Prisma Cloud image scan
-        id: scan
-        uses: PaloAltoNetworks/prisma-cloud-scan@v1
-        with:
-          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
-          pcc_user: ${{ secrets.PCC_USER }}
-          pcc_pass: ${{ secrets.PCC_PASS }}
-          image_name: ${{ env.IMAGE_NAME }}
+         
+      - name: Download and scan twistcli
+        run: |
+          curl -s -k -L -u ${{secrets.PCC_USER}}:${{secrets.PCC_PASS}} ${{ secrets.PCC_CONSOLE_URL }}/api/v1/util/twistcli > twistcli && chmod 0755 twistcli
+          ls -la
+          ./twistcli images scan -u ${{secrets.PCC_USER}} -p ${{secrets.PCC_PASS}} --address ${{ secrets.PCC_CONSOLE_URL }} --details --output-file ./twistcli.log --ci ${{env.IMAGE_NAME}}
+          
+
+#      - name: Prisma Cloud image scan
+#        id: scan
+#        uses: PaloAltoNetworks/prisma-cloud-scan@v1
+#        with:
+#          pcc_console_url: ${{ secrets.PCC_CONSOLE_URL }}
+#          pcc_user: ${{ secrets.PCC_USER }}
+#          pcc_pass: ${{ secrets.PCC_PASS }}
+#          image_name: ${{ env.IMAGE_NAME }}
