@@ -1,4 +1,4 @@
-name: snyk-iac-scan
+name: snyk-container-scan-self
 
 on: 
   workflow_dispatch:
