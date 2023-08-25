@@ -1,4 +1,4 @@
-name: appsec_poc_self
+name: Container-Self-ECR
 
 on: 
   workflow_dispatch:
