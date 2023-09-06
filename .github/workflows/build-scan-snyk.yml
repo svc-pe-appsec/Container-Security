@@ -38,6 +38,8 @@ jobs:
      
       - name: Snyk Container # Rename your image, for testing and failing please add snyk container test before snyk container monitor
         run: |
+            snyk container --help
+            snyk container test $GITHUB_WORKFLOW:$GITHUB_RUN_ID --file=Dockerfile --severity-threshold
             snyk container test $GITHUB_WORKFLOW:$GITHUB_RUN_ID --file=Dockerfile --exclude-base-image-vulns
 #            snyk container monitor $GITHUB_WORKFLOW:$GITHUB_RUN_ID --file=Dockerfile
             
